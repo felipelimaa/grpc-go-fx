@@ -6,11 +6,11 @@
    - Public, no README / .gitignore / license (we already have them)
    - Create repository
 
-2. **Add remote and push** (replace `YOUR_USERNAME` with your GitHub username)
+2. **Add remote and push** (replace `felipelimaa` with your GitHub username)
 
    ```bash
    cd /Users/felipe.lima/Developer/grpc-go-fx
-   git remote add origin https://github.com/YOUR_USERNAME/grpc-go-fx.git
+   git remote add origin https://github.com/felipelimaa/grpc-go-fx.git
    git push -u origin feat-initial-setup
    git push origin main
    ```
@@ -18,7 +18,7 @@
    Or with SSH:
 
    ```bash
-   git remote add origin git@github.com:YOUR_USERNAME/grpc-go-fx.git
+   git remote add origin git@github.com:felipelimaa/grpc-go-fx.git
    git push -u origin feat-initial-setup
    git push origin main
    ```
