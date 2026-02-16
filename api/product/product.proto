@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package product.v1;
+
+option go_package = "grpc-go-fx/internal/generated/product;product";
+
+// ProductService exposes product data for the Order service integration.
+service ProductService {
+  rpc GetProduct(GetProductRequest) returns (Product);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message ListProductsRequest {
+  int32 limit = 1;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+}
