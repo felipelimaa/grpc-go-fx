@@ -10,7 +10,8 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 install-tools:
 	@command -v protoc-gen-go >/dev/null 2>&1 || go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@command -v protoc-gen-go-grpc >/dev/null 2>&1 || go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	@echo "protoc-gen-go and protoc-gen-go-grpc installed. Ensure GOPATH/bin (or GOBIN) is in your PATH."
+	@command -v protoc-gen-grpc-gateway >/dev/null 2>&1 || go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	@echo "protoc-gen-go, protoc-gen-go-grpc and protoc-gen-grpc-gateway installed. Ensure GOPATH/bin (or GOBIN) is in your PATH."
 
 generate: install-tools
 	@./scripts/gen.sh

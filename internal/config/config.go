@@ -6,4 +6,6 @@ type Config struct {
 	ServerAddr string
 	// ClientTarget is the target address for the gRPC client to dial (e.g. "localhost:50051").
 	ClientTarget string
+	// HTTPGatewayAddr is the listen address for the HTTP/JSON gateway (e.g. ":8080").
+	HTTPGatewayAddr string
 }
