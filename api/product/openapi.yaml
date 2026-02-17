@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: grpc-go-fx
+  version: 1.0.0
+  description: |
+    HTTP representation of the gRPC ProductService.
+    This specification documents the GetProduct and ListProducts operations
+    so they can be invoked via tools such as Postman or Insomnia.
+
+servers:
+  - url: http://localhost:8080
+    description: HTTP/JSON gateway for the ProductService (grpc-gateway, same process as gRPC server)
+
+paths:
+  /product.v1.ProductService/GetProduct:
+    post:
+      operationId: GetProduct
+      summary: Get a single product by ID
+      description: |
+        Calls the gRPC GetProduct method via grpc-gateway using the default
+        unannotated mapping (generate_unbound_methods=true).
+
+        The HTTP request body is mapped to the GetProductRequest message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetProductRequest"
+            example:
+              id: "prod-1"
+      responses:
+        "200":
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /product.v1.ProductService/ListProducts:
+    post:
+      operationId: ListProducts
+      summary: List products
+      description: |
+        Calls the gRPC ListProducts method via grpc-gateway using the default
+        unannotated mapping (generate_unbound_methods=true).
+
+        The HTTP request body is mapped to the ListProductsRequest message.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListProductsRequest"
+            example:
+              limit: 2
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProductsResponse"
+
+components:
+  schemas:
+    Product:
+      type: object
+      description: Product entity as exposed by ProductService.
+      properties:
+        id:
+          type: string
+          description: Unique product identifier.
+        name:
+          type: string
+          description: Human-readable product name.
+        description:
+          type: string
+          description: Detailed description of the product.
+        price:
+          type: number
+          format: double
+          description: Product price.
+      required:
+        - id
+        - name
+        - description
+        - price
+
+    GetProductRequest:
+      type: object
+      description: Request message for GetProduct (gRPC).
+      properties:
+        id:
+          type: string
+          description: Unique product identifier.
+      required:
+        - id
+
+    ListProductsRequest:
+      type: object
+      description: Request message for ListProducts (gRPC).
+      properties:
+        limit:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Maximum number of products to return.
+          example: 2
+
+    ListProductsResponse:
+      type: object
+      description: Response message containing a list of products.
+      properties:
+        products:
+          type: array
+          description: List of products.
+          items:
+            $ref: "#/components/schemas/Product"

@@ -32,7 +32,9 @@ func main() {
 	target := flag.String("addr", "localhost:50051", "gRPC server address to dial")
 	flag.Parse()
 
-	cfg := &config.Config{ClientTarget: *target}
+	cfg := &config.Config{
+		ClientTarget: *target,
+	}
 
 	app := fx.New(
 		fx.Supply(cfg),
