@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"grpc-go-fx/internal/client"
@@ -13,10 +14,12 @@ import (
 	"grpc-go-fx/internal/generated/product"
 
 	"go.uber.org/fx"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
-	if product.File_api_product_product_proto == nil {
+	if product.File_product_proto == nil {
 		log.Fatal("Generated proto descriptor not loaded. Run: make generate (requires protoc, protoc-gen-go, protoc-gen-go-grpc). See README.")
 	}
 	target := flag.String("addr", "localhost:50051", "gRPC server address to dial")
@@ -40,7 +43,12 @@ func RunOrderDemo(c *client.Client, shutdowner fx.Shutdowner) {
 	fmt.Fprintln(os.Stderr, "Order service: fetching product prod-1 from Product API...")
 	p, err := c.GetProduct(ctx, "prod-1")
 	if err != nil {
-		log.Printf("GetProduct: %v", err)
+		if status.Code(err) == codes.Unavailable && strings.Contains(err.Error(), "connection refused") {
+			log.Printf("GetProduct: %v", err)
+			log.Print("Hint: start the Product gRPC server first (e.g. make run-server in another terminal, or use make run-all).")
+		} else {
+			log.Printf("GetProduct: %v", err)
+		}
 		_ = shutdowner.Shutdown()
 		return
 	}
