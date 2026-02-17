@@ -1,4 +1,4 @@
-.PHONY: install-tools generate run-server run-client run-all
+.PHONY: install-tools generate run-server run-client run-all test test-cover
 # Server listens on SERVER_PORT; client connects to CLIENT_TARGET (default: same port).
 SERVER_PORT ?= 50051
 SERVER_ADDR ?= :$(SERVER_PORT)
@@ -28,3 +28,12 @@ run-client:
 run-all:
 	@go run ./cmd/server -addr=$(SERVER_ADDR) & \
 	pid=$$!; sleep 1; go run ./cmd/client -addr=$(CLIENT_TARGET); kill $$pid 2>/dev/null || true
+
+# Run unit tests for core handwritten packages with coverage enabled.
+test:
+	@go test ./internal/server ./internal/client ./internal/gateway ./internal/config -cover
+
+# Run unit tests with coverage profile and print per-function coverage.
+test-cover:
+	@go test ./internal/server ./internal/client ./internal/gateway ./internal/config -coverprofile=coverage.out
+	@go tool cover -func=coverage.out

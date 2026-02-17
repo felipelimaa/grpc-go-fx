@@ -43,6 +43,22 @@ go build -o bin/client ./cmd/client
 
 The client simulates the Order service: it calls `GetProduct("prod-1")` and `ListProducts(2)` and prints the results.
 
+## Unit tests
+
+You can run the unit tests against the core, handwritten packages (server, client, gateway, config) with:
+
+```bash
+make test
+```
+
+To run tests with coverage enabled and see a per-function breakdown:
+
+```bash
+make test-cover
+```
+
+This uses Go’s built-in coverage tooling and excludes generated code under `internal/generated/product` so that coverage reflects only the application logic you maintain.
+
 ## HTTP/JSON gateway and OpenAPI
 
 In addition to pure gRPC, this project exposes the `ProductService` over HTTP/JSON using **grpc-gateway**.
