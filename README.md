@@ -1,6 +1,6 @@
-# gRPC Go API Integration
+# gRPC Go Product API
 
-A Go project that simulates integration between two APIs over gRPC: an **Order service** (client) calls a **Product service** (server) to fetch product details. Uses **Uber FX** for dependency injection and lifecycle management.
+A Go project that exposes a **Product API** over gRPC and HTTP/JSON (via grpc-gateway). Uses **Uber FX** for dependency injection and lifecycle management.
 
 ## Prerequisites
 
@@ -27,25 +27,16 @@ This runs `scripts/gen.sh`, which uses `protoc` to generate:
 
 ## Build and run
 
-**Terminal 1 – Product gRPC server + HTTP gateway**
+**Start the Product API (gRPC server + HTTP gateway)**
 
 ```bash
-go build -o bin/server ./cmd/server
-./bin/server -addr=:50051 -http-addr=:8080
+go build -o bin/api ./cmd/api
+./bin/api -addr=:50051 -http-addr=:8080
 ```
-
-**Terminal 2 – Order client (calls Product API)**
-
-```bash
-go build -o bin/client ./cmd/client
-./bin/client -addr=localhost:50051
-```
-
-The client simulates the Order service: it calls `GetProduct("prod-1")` and `ListProducts(2)` and prints the results.
 
 ## Unit tests
 
-You can run the unit tests against the core, handwritten packages (server, client, gateway, config) with:
+You can run the unit tests against the core, handwritten packages (API, gateway, config) with:
 
 ```bash
 make test
@@ -71,10 +62,10 @@ In addition to pure gRPC, this project exposes the `ProductService` over HTTP/JS
 
 ### Test the API via HTTP with curl
 
-Make sure the server is running:
+Make sure the Product API is running:
 
 ```bash
-./bin/server -addr=:50051 -http-addr=:8080
+./bin/api -addr=:50051 -http-addr=:8080
 ```
 
 **Get a single product by ID**:
@@ -101,10 +92,10 @@ You can omit the body or send `{}` to use the server’s default limit.
 
 ### Test the API via OpenAPI (Postman / Insomnia)
 
-1. Start the server with the gateway:
+1. Start the Product API with the gateway:
 
    ```bash
-   ./bin/server -addr=:50051 -http-addr=:8080
+   ./bin/api -addr=:50051 -http-addr=:8080
    ```
 
 2. In Postman (or Insomnia):
@@ -137,14 +128,12 @@ You can omit the body or send `{}` to use the server’s default limit.
 ## Project layout
 
 - `api/product/product.proto` – Product service and messages
-- `internal/config` – Server/client address config (supplied via FX)
+- `internal/config` – Product API configuration (supplied via FX)
 - `internal/generated/product` – Generated Go from proto (run `make generate`)
 - `api/product/openapi.yaml` – OpenAPI 3 spec for the HTTP/JSON gateway
 - `internal/gateway` – grpc-gateway HTTP/JSON server wired into FX
-- `internal/server` – Product gRPC server + FX module
-- `internal/client` – gRPC client wrapper + FX module
-- `cmd/server` – Server entrypoint (FX app)
-- `cmd/client` – Client entrypoint (FX app, runs demo then exits)
+- `internal/api` – Product API implementation + gRPC server constructor + FX module
+- `cmd/api` – Product API entrypoint (FX app)
 
 ## Documentation
 

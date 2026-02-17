@@ -9,16 +9,16 @@ import (
 	"testing"
 	"time"
 
+	"grpc-go-fx/internal/api"
 	"grpc-go-fx/internal/config"
 	"grpc-go-fx/internal/generated/product"
-	"grpc-go-fx/internal/server"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/fx"
 )
 
 func TestNewServeMux_RegistersHandlers(t *testing.T) {
-	svc := server.NewProductService()
+	svc := api.NewProductService()
 
 	mux, err := NewServeMux(svc)
 	if err != nil {
@@ -30,7 +30,7 @@ func TestNewServeMux_RegistersHandlers(t *testing.T) {
 }
 
 func TestGateway_GetProductViaHTTP(t *testing.T) {
-	svc := server.NewProductService()
+	svc := api.NewProductService()
 	mux, err := NewServeMux(svc)
 	if err != nil {
 		t.Fatalf("NewServeMux returned error: %v", err)
@@ -60,7 +60,7 @@ func TestGateway_GetProductViaHTTP(t *testing.T) {
 }
 
 func TestGateway_ListProductsViaHTTP(t *testing.T) {
-	svc := server.NewProductService()
+	svc := api.NewProductService()
 	mux, err := NewServeMux(svc)
 	if err != nil {
 		t.Fatalf("NewServeMux returned error: %v", err)
