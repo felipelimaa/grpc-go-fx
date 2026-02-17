@@ -1,8 +1,7 @@
-.PHONY: install-tools generate run-server run-client run-all test test-cover
-# Server listens on SERVER_PORT; client connects to CLIENT_TARGET (default: same port).
-SERVER_PORT ?= 50051
-SERVER_ADDR ?= :$(SERVER_PORT)
-CLIENT_TARGET ?= localhost:$(SERVER_PORT)
+.PHONY: install-tools generate run-api test test-cover
+# API listens on API_PORT.
+API_PORT ?= 50051
+API_ADDR ?= :$(API_PORT)
 # Ensure protoc can find Go-installed plugins (protoc-gen-go, protoc-gen-go-grpc)
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
 
@@ -16,24 +15,15 @@ install-tools:
 generate: install-tools
 	@./scripts/gen.sh
 
-# Start gRPC server (listens on SERVER_PORT). Override: make run-server SERVER_PORT=50052
-run-server:
-	@go run ./cmd/server -addr=$(SERVER_ADDR)
-
-# Run gRPC client (one-shot). Connects to CLIENT_TARGET. Start server first: make run-server (or use make run-all).
-run-client:
-	@go run ./cmd/client -addr=$(CLIENT_TARGET)
-
-# Run both APIs: server in background on SERVER_PORT, then client. Stop server with Ctrl+C or kill the server process.
-run-all:
-	@go run ./cmd/server -addr=$(SERVER_ADDR) & \
-	pid=$$!; sleep 1; go run ./cmd/client -addr=$(CLIENT_TARGET); kill $$pid 2>/dev/null || true
+# Start Product API gRPC server (listens on API_PORT). Override: make run-api API_PORT=50052
+run-api:
+	@go run ./cmd/api -addr=$(API_ADDR)
 
 # Run unit tests for core handwritten packages with coverage enabled.
 test:
-	@go test ./internal/server ./internal/client ./internal/gateway ./internal/config -cover
+	@go test ./internal/api ./internal/gateway ./internal/config -cover
 
 # Run unit tests with coverage profile and print per-function coverage.
 test-cover:
-	@go test ./internal/server ./internal/client ./internal/gateway ./internal/config -coverprofile=coverage.out
+	@go test ./internal/api ./internal/gateway ./internal/config -coverprofile=coverage.out
 	@go tool cover -func=coverage.out

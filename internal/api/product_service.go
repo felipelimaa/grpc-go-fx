@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 // ProductService implements product.ProductServiceServer with in-memory storage.
 type ProductService struct {
 	product.UnimplementedProductServiceServer
-	mu     sync.RWMutex
-	store  map[string]*product.Product
+	mu    sync.RWMutex
+	store map[string]*product.Product
 }
 
 // NewProductService creates a ProductService with seeded product data.
@@ -61,3 +61,4 @@ func NewGRPCServer(cfg *config.Config, svc product.ProductServiceServer) *grpc.S
 	product.RegisterProductServiceServer(srv, svc)
 	return srv
 }
+

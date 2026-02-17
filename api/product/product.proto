@@ -4,7 +4,7 @@ package product.v1;
 
 option go_package = "grpc-go-fx/internal/generated/product;product";
 
-// ProductService exposes product data for the Order service integration.
+// ProductService exposes product data for the Product API.
 service ProductService {
   rpc GetProduct(GetProductRequest) returns (Product);
   rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);

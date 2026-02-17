@@ -3,16 +3,16 @@ package main
 import (
 	"flag"
 
+	"grpc-go-fx/internal/api"
 	"grpc-go-fx/internal/config"
 	"grpc-go-fx/internal/gateway"
-	"grpc-go-fx/internal/server"
 
 	"go.uber.org/fx"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	addr := flag.String("addr", ":50051", "gRPC server listen address")
+	addr := flag.String("addr", ":50051", "gRPC API listen address")
 	httpAddr := flag.String("http-addr", ":8080", "HTTP/JSON gateway listen address (grpc-gateway)")
 	flag.Parse()
 
@@ -23,9 +23,10 @@ func main() {
 
 	app := fx.New(
 		fx.Supply(cfg),
-		server.Module,
+		api.Module,
 		gateway.Module,
-		fx.Invoke(func(*grpc.Server) {}), // ensure server is built and lifecycle runs
+		fx.Invoke(func(*grpc.Server) {}), // ensure API server is built and lifecycle runs
 	)
 	app.Run()
 }
+

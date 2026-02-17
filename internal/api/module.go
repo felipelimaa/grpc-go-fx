@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"context"
@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-// Module is the FX module for the Product gRPC server.
-var Module = fx.Module("server",
+// Module is the FX module for the Product API gRPC server.
+var Module = fx.Module("api",
 	fx.Provide(fx.Annotate(NewProductService, fx.As(new(product.ProductServiceServer)))),
 	fx.Provide(NewGRPCServer),
 	fx.Invoke(RegisterGRPCLifecycle),
@@ -37,3 +37,4 @@ func RegisterGRPCLifecycle(lc fx.Lifecycle, srv *grpc.Server, cfg *config.Config
 		},
 	})
 }
+

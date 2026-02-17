@@ -1,11 +1,9 @@
 package config
 
-// Config holds server and client gRPC addresses for the Product API integration.
+// Config holds addresses for the Product API.
 type Config struct {
-	// ServerAddr is the listen address for the gRPC server (e.g. ":50051").
+	// ServerAddr is the listen address for the gRPC API server (e.g. ":50051").
 	ServerAddr string
-	// ClientTarget is the target address for the gRPC client to dial (e.g. "localhost:50051").
-	ClientTarget string
 	// HTTPGatewayAddr is the listen address for the HTTP/JSON gateway (e.g. ":8080").
 	HTTPGatewayAddr string
 }
